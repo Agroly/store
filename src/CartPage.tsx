@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Container, Row, Col, Button, Card } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css"; // Импорт стилей Bootstrap
+import { Link} from "react-router-dom";
+import { Container, Row, Col, Button, Card, Alert } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-// Определяем интерфейс для продукта
 interface Product {
   id: number;
   name: string;
@@ -12,23 +11,38 @@ interface Product {
   photoUrl: string;
 }
 
-// Определяем интерфейс для элемента корзины
 interface CartItem extends Product {
   quantity: number;
 }
 
+interface OrderItem {
+  productId: number;
+  quantity: number;
+}
+
+interface User {
+  name: string;
+  email: string;
+  address: string;
+}
+
 const CartPage: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
 
-  // Загружаем корзину из localStorage при загрузке страницы
   useEffect(() => {
     const cartData = localStorage.getItem("cart");
     if (cartData) {
       setCart(JSON.parse(cartData));
     }
+
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
   }, []);
 
-  // Функция для увеличения количества продукта в корзине
   const addToCart = (productId: number) => {
     setCart((prevCart) => {
       const updatedCart = prevCart.map((item) =>
@@ -39,7 +53,6 @@ const CartPage: React.FC = () => {
     });
   };
 
-  // Функция для уменьшения количества продукта в корзине
   const removeFromCart = (productId: number) => {
     setCart((prevCart) => {
       const updatedCart = prevCart
@@ -54,7 +67,6 @@ const CartPage: React.FC = () => {
     });
   };
 
-  // Функция для удаления продукта из корзины
   const deleteFromCart = (productId: number) => {
     setCart((prevCart) => {
       const updatedCart = prevCart.filter((item) => item.id !== productId);
@@ -63,9 +75,55 @@ const CartPage: React.FC = () => {
     });
   };
 
+  const handleOrder = async () => {
+    if (!user) {
+      setShowAlert(true);
+      return;
+    }
+
+    const orderItems: OrderItem[] = cart.map(item => ({
+      productId: item.id,
+      quantity: item.quantity
+    }));
+
+    const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    const order = {
+      email: user.email,
+      address: user.address,
+      totalPrice,
+      orderItems,
+      status: 'Создан'
+    };
+
+    const response = await fetch('https://localhost:7025/api/order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(order),
+    });
+
+    if (response.ok) {
+      alert('Заказ успешно создан!');
+      localStorage.removeItem("cart");
+      setCart([]);
+    } else {
+      alert('Не удалось создать заказ.');
+    }
+  };
+
   return (
     <Container className="mt-5">
-      <h2 className="text-center mb-4">Your Cart</h2>
+      <h2 className="text-center mb-4">Ваша корзина</h2>
+      {showAlert && (
+        <Alert variant="warning" onClose={() => setShowAlert(false)} dismissible>
+          <Alert.Heading>Вы не вошли</Alert.Heading>
+          <p>
+            Пожалуйста, <Link to="/login">войдите</Link> или <Link to="/register">зарегистрируйтесь</Link>.
+          </p>
+        </Alert>
+      )}
       <Row>
         {cart.map((item) => (
           <Col key={item.id} md={12} className="mb-4">
@@ -80,7 +138,7 @@ const CartPage: React.FC = () => {
                     <Card.Text>{item.description}</Card.Text>
                   </Col>
                   <Col md={2}>
-                    <Card.Text>${item.price}</Card.Text>
+                    <Card.Text>{item.price} руб.</Card.Text>
                   </Col>
                   <Col md={2}>
                     <div className="d-flex align-items-center">
@@ -104,7 +162,7 @@ const CartPage: React.FC = () => {
                       variant="danger"
                       onClick={() => deleteFromCart(item.id)}
                     >
-                      Remove
+                      Удалить
                     </Button>
                   </Col>
                 </Row>
@@ -113,10 +171,13 @@ const CartPage: React.FC = () => {
           </Col>
         ))}
       </Row>
-      {cart.length === 0 && <p className="text-center">Your cart is empty.</p>}
+      {cart.length === 0 && <p className="text-center">Ваша корзина пуста.</p>}
+      <div className="text-center mt-4">
+        <Button onClick={handleOrder} className="btn btn-primary">Создать заказ</Button>
+      </div>
       <div className="text-center mt-4">
         <Link to="/" className="btn btn-primary">
-          Continue Shopping
+          Продолжить покупки
         </Link>
       </div>
     </Container>
