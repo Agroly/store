@@ -114,15 +114,15 @@ const HomePage: React.FC = () => {
                             </Nav.Link>
                             {token ? (
                                 <Nav.Link onClick={handleLogout}>
-                                    <FaSignOutAlt /> Logout
+                                    <FaSignOutAlt /> Выйти
                                 </Nav.Link>
                             ) : (
                                 <>
                                     <Nav.Link as={Link} to="/login">
-                                        <FaSignInAlt /> Login
+                                        <FaSignInAlt /> Войти
                                     </Nav.Link>
                                     <Nav.Link as={Link} to="/register">
-                                        <FaSignInAlt /> Register
+                                        <FaSignInAlt /> Регистрация
                                     </Nav.Link>
                                 </>
                             )}
@@ -132,8 +132,7 @@ const HomePage: React.FC = () => {
             </Navbar>
 
             <Container className="mt-5">
-                <h2 className="text-center mb-4">Welcome to MyStore!</h2>
-                {token && <p className="text-center">Hello, {userName}! You are logged in.</p>}
+                <h2 className="text-center mb-4">Добро пожаловать в MyStore!</h2>
 
                 <Row>
                     {products.map(product => {
@@ -145,7 +144,7 @@ const HomePage: React.FC = () => {
                                     <Card.Body>
                                         <Card.Title>{product.name}</Card.Title>
                                         <Card.Text>{product.description}</Card.Text>
-                                        <Card.Text>${product.price}</Card.Text>
+                                        <Card.Text>{product.price} руб.</Card.Text>
                                         {cartItem ? (
                                             <div>
                                                 <Button variant="secondary" onClick={() => removeFromCart(product.id)}>-</Button>
@@ -153,7 +152,7 @@ const HomePage: React.FC = () => {
                                                 <Button variant="secondary" onClick={() => addToCart(product)}>+</Button>
                                             </div>
                                         ) : (
-                                            <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
+                                            <Button variant="primary" onClick={() => addToCart(product)}>Добавить в корзину</Button>
                                         )}
                                     </Card.Body>
                                 </Card>

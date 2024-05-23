@@ -23,7 +23,7 @@ const RegisterPage: React.FC = () => {
     }));
     if (name === 'password') {
       if (value.length < 5) {
-        setError('Password must be at least 5 characters long.');
+        setError('Минимальная длина пароля 5 символов.');
       } else {
         setError('');
       }
@@ -31,7 +31,7 @@ const RegisterPage: React.FC = () => {
     if (name === 'email') {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(value)) {
-        setError('Invalid email address.');
+        setError('Неверный адрес электронной почты.');
       } else {
         setError('');
       }
@@ -57,51 +57,51 @@ const RegisterPage: React.FC = () => {
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
       <Form style={{ width: '33%' }} onSubmit={handleSubmit}>
-        <h2>Register</h2>
+        <h2>Регистрация</h2>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+          <Form.Label>Адрес электронной почты</Form.Label>
           <Form.Control 
             type="email" 
             name="email" 
             value={formData.email} 
             onChange={handleChange} 
-            placeholder="Enter email" 
+            placeholder="Введите email" 
             required 
           />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicName">
-          <Form.Label>Name</Form.Label>
+          <Form.Label>ФИО</Form.Label>
           <Form.Control 
             type="text" 
             name="name" 
             value={formData.name} 
             onChange={handleChange} 
-            placeholder="Enter name" 
+            placeholder="Введите ФИО" 
             required 
           />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicAddress">
-          <Form.Label>Address</Form.Label>
+          <Form.Label>Адрес</Form.Label>
           <Form.Control 
             type="text" 
             name="address" 
             value={formData.address} 
             onChange={handleChange} 
-            placeholder="Enter address" 
+            placeholder="Введите адрес" 
             required 
           />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Пароль</Form.Label>
           <Form.Control 
             type="password" 
             name="password" 
             value={formData.password} 
             onChange={handleChange} 
-            placeholder="Password" 
+            placeholder="Пароль" 
             required 
           />
         </Form.Group>
@@ -109,7 +109,7 @@ const RegisterPage: React.FC = () => {
         {error && <p className="text-danger">{error}</p>}
 
         <Button variant="primary" type="submit">
-          Register
+          Зарегистрироваться
         </Button>
       </Form>
     </div>

@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
     const emailValue = e.target.value;
     setEmail(emailValue);
     if (!isValidEmail(emailValue)) {
-      setEmailError('Please enter a valid email address.');
+      setEmailError('Пожалуйста, введите корректную почту.');
     } else {
       setEmailError('');
     }
@@ -31,7 +31,7 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async () => {
     if (!isValidEmail(email)) {
-      setError('Please enter a valid email address.');
+      setError('Пожалуйста, введите корректную почту.');
       return;
     }
 
@@ -42,40 +42,40 @@ const LoginPage: React.FC = () => {
       localStorage.setItem('user', JSON.stringify(user)); // Save user data to localStorage
       navigate('/'); // Navigate to the home page
     } catch (error) {
-      setError('Invalid email or password. Please try again.');
+      setError('Неверный адрес электронной почты или пароль.');
     }
   };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
       <Form style={{ width: '33%' }} onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
-        <h2>Login</h2>
+        <h2>Войти</h2>
         {error && <Alert variant="danger">{error}</Alert>}
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+          <Form.Label>Электронная почта</Form.Label>
           <Form.Control 
             type="email" 
             value={email} 
             onChange={handleEmailChange} 
-            placeholder="Enter email" 
+            placeholder="Введите email" 
             required 
           />
           {emailError && <Form.Text className="text-danger">{emailError}</Form.Text>}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Пароль</Form.Label>
           <Form.Control 
             type="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
-            placeholder="Password" 
+            placeholder="Пароль" 
             required 
           />
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Login
+          Войти
         </Button>
       </Form>
     </div>
