@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container, Card, Row, Col, Button } from 'react-bootstrap';
-import { FaSignInAlt, FaSignOutAlt, FaShoppingCart } from 'react-icons/fa';
+import { FaSignInAlt, FaSignOutAlt, FaShoppingCart, FaUser } from 'react-icons/fa'; // Импортируем иконку FaUser
 import 'bootstrap/dist/css/bootstrap.min.css'; // Импорт стилей Bootstrap
 import axios from 'axios'; // Импортируем Axios
 
@@ -49,6 +49,7 @@ const HomePage: React.FC = () => {
                     photoUrl: 'https://localhost:7025/' + product.photoUrl
                 }));
                 setProducts(productsWithFullImageUrl);
+                console.log(productsWithFullImageUrl)
             })
             .catch(error => {
                 console.error('Error fetching products:', error);
@@ -113,9 +114,14 @@ const HomePage: React.FC = () => {
                                 )}
                             </Nav.Link>
                             {token ? (
-                                <Nav.Link onClick={handleLogout}>
-                                    <FaSignOutAlt /> Выйти
-                                </Nav.Link>
+                                <>
+                                    <Nav.Link as={Link} to="/account">
+                                        <FaUser /> {userName}
+                                    </Nav.Link>
+                                    <Nav.Link onClick={handleLogout}>
+                                        <FaSignOutAlt /> Выйти
+                                    </Nav.Link>
+                                </>
                             ) : (
                                 <>
                                     <Nav.Link as={Link} to="/login">
